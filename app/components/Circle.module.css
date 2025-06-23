@@ -1,0 +1,42 @@
+.circle{
+    /* border: 1px solid red; */
+    position: relative;
+    height: 70px;
+    width: 70px;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+}
+.circleSvg{
+    /* border: 1px solid blue; */
+    height: 100%;
+    width: 100%;
+
+    position: absolute;
+}
+
+.textLeft{
+    /* position: absolute; */
+    /* top: 25%; */
+    font-size: 15px;
+    color: var(--color1);
+}
+
+/* .red{
+    color: red !important;
+}
+
+.yellow{
+    color: yellow !important;
+}
+
+.blue{
+    color: blue !important;
+}
+
+.green{
+    color: green !important;
+} */

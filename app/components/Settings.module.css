@@ -1,0 +1,100 @@
+.container {
+  /* border: 1px solid red; */
+  border: none;
+  background-color: transparent;
+
+  position: fixed;
+  top: 10px;
+  right: 10px;
+
+  width: 40px;
+  height: 40px;
+
+  cursor: pointer;
+}
+
+.container:hover {
+  animation-name: MyAnimation;
+  animation-duration: 3s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes MyAnimation {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.overlay {
+  /* border: 1px solid red; */
+
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  /* left: 50%; */
+  /* top: 50%; */
+  /* transform: translateX(-50%) translateY(-50%); */
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.settingsC {
+  border: 1px solid var(--color2);
+  width: 100px;
+  height: 100px;
+  width: fit-content;
+  height: fit-content;
+
+  border-radius: 10px;
+  padding: 10px;
+
+  backdrop-filter: blur(50px);
+  box-shadow: 0px 0px 10px var(--color2);
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.closeButton {
+  background-color: transparent;
+  border: none;
+
+  align-self: flex-end;
+  width: 30px;
+  height: 30px;
+
+  cursor: pointer;
+}
+
+.settingsC > div {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.anim {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+
+.resetColorButton{
+  margin: auto;
+  border: none;
+
+  padding: 5px;
+  border-radius: 5px;
+
+  width: 100px;
+
+  background-color: var(--color3);
+  color: var(--color2);
+}
