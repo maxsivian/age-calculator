@@ -16,7 +16,6 @@ const Input = () => {
   const handleSetValue = ()=>{
     dispatch(setValue(localValue))
     dispatch(setDatetime(new Date().toLocaleString('en-GB', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false })));
-
   }
 
   return (

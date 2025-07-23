@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react"
 import { memo } from "react"
 import styles from "./Display.module.css"
 import { useSelector } from "react-redux"
-import { useCallback } from "react"
 
 import html2canvas from 'html2canvas'
 import Circle from "./Circle"
@@ -12,15 +11,17 @@ import DownloadSVG from "./svg_components/DownloadSVG"
 import DateTime from "./DateTime"
 
 
-let name
-let currentDate
+let now 
 
 let total_seconds
 let total_minutes
 let total_hours
 let total_days
 let total_weeks
-let years_diff
+let yearDiff
+let monthDiff
+let dayBorrow
+
 let total_months
 let total_years
 
@@ -32,69 +33,109 @@ let normalized_year
 const Display = () => {
 
   const value = useSelector((state) => state.core.value)
-  const name = useSelector((state) => state.core.name)
+  // const name = useSelector((state) => state.core.name)
 
   const intervalRef = useRef(null)
-  const [data, setData] = useState({ total_seconds: 0, total_minutes: 0, total_hours: 0, total_days: 0, total_weeks: 0, years_diff: 0, total_months: 0, total_years: 0, years: 0, months: 0, days: 0, normalized_year: 0 })
+  const [data, setData] = useState({ total_seconds: 0, total_minutes: 0, total_hours: 0, total_days: 0, total_weeks: 0, total_months: 0, total_years: 0, years: 0, months: 0, days: 0, normalized_year: 0 })
   // const [visibility, setVisibility] = useState(false)
 
+
   useEffect(() => {
-    if (value) {
-      let birthDate = new Date(value)
-
-      intervalRef.current = setInterval(() => {
-        currentDate = new Date()
-
-        total_seconds = Math.floor((currentDate.getTime() - birthDate.getTime()) / 1000)
-        total_minutes = Math.floor(total_seconds / 60)
-        total_hours = Math.floor(total_minutes / 60)
-        total_days = Math.floor(total_hours / 24)
-        total_weeks = Math.floor(total_days / 7)
-
-        years_diff = currentDate.getFullYear() - birthDate.getFullYear()
-        total_months = years_diff * 12 + (currentDate.getMonth() - birthDate.getMonth())
-        total_years = Math.floor(total_months / 12)
-
-        years = total_years
-        months = Math.floor((total_days % 365) / 30)
-        days = (total_days % 365) % 30
-
-        normalized_year = (total_seconds / (60 * 60 * 24 * 365)).toFixed(9)
-
-        // console.log(total_seconds);
-        setData({
-          ...data,
-          total_seconds, total_minutes, total_hours, total_days, total_weeks, years_diff, total_months, total_years, years, months, days, normalized_year
-        })
-
-      }, 1000);
-    }
-    else{
-      setData({ total_seconds: 0, total_minutes: 0, total_hours: 0, total_days: 0, total_weeks: 0, years_diff: 0, total_months: 0, total_years: 0, years: 0, months: 0, days: 0, normalized_year: 0 })
+    if (!value) {
+      setData({
+        total_seconds: 0,
+        total_minutes: 0,
+        total_hours: 0,
+        total_days: 0,
+        total_weeks: 0,
+        years_diff: 0,
+        total_months: 0,
+        total_years: 0,
+        years: 0,
+        months: 0,
+        days: 0,
+        normalized_year: 0
+      });
+      return;
     }
 
-    return () => {
-      clearInterval(intervalRef.current)
-    }
-  }, [value])
+    const birthDate = new Date(value);
+
+    intervalRef.current = setInterval(() => {
+      now = new Date();
+
+      total_seconds = Math.floor((now - birthDate) / 1000);
+      total_minutes = Math.floor(total_seconds / 60);
+      total_hours = Math.floor(total_minutes / 60);
+      total_days = Math.floor(total_hours / 24);
+      total_weeks = Math.floor(total_days / 7);
+
+      // --- ACCURATE YEAR / MONTH / DAY ---
+      yearDiff = now.getFullYear() - birthDate.getFullYear();
+      monthDiff = now.getMonth() - birthDate.getMonth();
+      dayBorrow = now.getDate() < birthDate.getDate() ? 1 : 0;
+
+      total_months = yearDiff * 12 + monthDiff - dayBorrow;
+      total_years = Math.floor(total_months / 12);
+
+      years = total_years;
+      months = ((total_months % 12) + 12) % 12;
+
+      if (now.getDate() >= birthDate.getDate()) {
+        days = now.getDate() - birthDate.getDate();
+      } else {
+        const daysInPrevMonth = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          0
+        ).getDate();
+        days = now.getDate() + daysInPrevMonth - birthDate.getDate();
+      }
+
+      normalized_year = (total_seconds / (60 * 60 * 24 * 365)).toFixed(9);
+ 
+      setData(prev => ({
+        ...prev,
+        total_seconds,
+        total_minutes,
+        total_hours, 
+        total_days,
+        total_weeks,
+        total_months,
+        total_years,
+        years,
+        months,
+        days,
+        normalized_year
+      }));
+    }, 1000);
+
+    return () => clearInterval(intervalRef.current);
+  }, [value]);
 
 
-  const downloadDiv = useCallback(() => {
+  const downloadDiv = async () => {
     const div = document.getElementById('targetDiv');
     if (!div) return;
 
-    html2canvas(div, { backgroundColor: null }).then((canvas) => {
-      const link = document.createElement('a');
-      link.download = `age.png`;
-      link.href = canvas.toDataURL();
-      link.click();
-    });
+    // html2canvas(div, { backgroundColor: null }).then((canvas) => {
+    //   const link = document.createElement('a');
+    //   link.download = `age.png`;
+    //   link.href = canvas.toDataURL();
+    //   link.click();
+    // });
 
-  }, [name]);
+    const canvas = await html2canvas(div, { backgroundColor: null });
+    const link = document.createElement('a');
+    link.download = 'age.png';
+    link.href = canvas.toDataURL();
+    link.click();
 
+  }
 
   return (
     <>
+      {/* {value} */}
       <div className={styles.display} id="targetDiv">
         <div className={styles.first} contentEditable spellCheck={false} autoFocus tabIndex={1} suppressContentEditableWarning>
           {/* {name == "" ? "Your Name" : name} */}
