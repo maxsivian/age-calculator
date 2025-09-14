@@ -15,23 +15,23 @@ export const metadata = {
     "age in months and days"
   ],
   robots: "index, follow",
-  metadataBase: new URL("https://age-calculator-maxsivians-projects.vercel.app/"),
+  metadataBase: new URL("https://age-calculator-maxsivian.vercel.app"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
     title: "AGE CALCULATOR",
     description: "Accurately calculate your age in years, months, and days using this free and easy-to-use age calculator.",
-    url: "https://age-calculator-maxsivians-projects.vercel.app/logo.png",
+    url: "https://age-calculator-maxsivian.vercel.app",
     type: "website",
-    images: ["https://age-calculator-maxsivians-projects.vercel.app/logo.png"],
+    images: ["https://age-calculator-maxsivian.vercel.app/logo.png"],
 
   },
   twitter: {
     card: "summary_large_image",
     title: "AGE CALCULATOR",
     description: "Accurately calculate your age in years, months, and days using this free and easy-to-use age calculator.",
-    images: ["https://age-calculator-maxsivians-projects.vercel.app/logo.png"],
+    images: ["https://age-calculator-maxsivian.vercel.app/logo.png"],
     site: "@maxsivian",
   },
 };
