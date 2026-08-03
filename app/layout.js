@@ -1,5 +1,6 @@
 import "./globals.css";
 import ReduxProviderWrapper from "./ReduxProviderWrapper";
+import CapacitorInit from "./CapacitorInit";
 
 export const metadata = {
   title: "AGE CALCULATOR",
@@ -49,6 +50,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
+        <CapacitorInit />
         <ReduxProviderWrapper>
           {children}
         </ReduxProviderWrapper>
